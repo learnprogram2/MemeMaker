@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta  charset="utf-8">
+		<title>canvas</title>
+		<link rel="stylesheet" href="css/style.css"/>
+		
+		<style>
+			#image-container{
+				display: flex;
+			}
+		</style>
+	</head>
+	<body>
+		<!--<canvas id="c" width="200" height="200"></canvas>-->
+		
+		
+		<div>
+    		<input type="file" id="file" />
+  		</div>
+		  <div id="image-container">
+		    <canvas width="500" height="500"></canvas>
+		    <div>
+		      <span>Top Line:</span><br/>
+		      <input id="topLineText" type="text"><br/>
+		      <span>Bottom Line:</span><br/>
+		      <input id="bottomLineText" type="text"><br/>
+		      <button id="saveBtn">Save</button>
+		    </div>
+		  </div>
+		
+		<script>
+//			获得想要添加的文本
+			function textChangeListener(evt){
+				var id=evt.target.id;
+				var text=evt.target.value;
+				
+//				把字母转化为大写
+				text=text.toUpperCase();				
+				if(id=="topLineText"){
+					window.topLineText=text;
+				}else{
+					window.bottomLineText=text;
+				}
+				
+				redrawMeme(window.imageSrc,window.topLineText,window.bottomLineText)
+			}
+
+			function redrawMeme(image,topLine,bottomLine){
+				//得到画布
+				var canvas=document.querySelector("canvas");
+				var ctx=canvas.getContext("2d");
+				
+				//your code here
+				if(image){
+					//先画图片
+					ctx.drawImage(image,0,0,canvas.width,canvas.height);
+					
+					//text attributes
+					ctx.font="30px Impact";
+					ctx.textAlign="center";
+					ctx.strokeStyle="black";
+					ctx.lineWidth=3;
+					ctx.fillStyle="white";
+				
+					if(topLine){
+						ctx.fillText(topLine,canvas.width/2,40);
+						ctx.strokeText(topLine,canvas.width/2,40);
+					}
+				
+					if(bottomLine){
+						ctx.fillText(bottomLine,canvas.width/2,canvas.height-20);
+						ctx.strokeText(bottomLine,canvas.width/2,canvas.height-30);
+					}
+				}				
+			}
+
+			//保存照片
+			function saveFile(){
+				window.open(document.querySelector("canvas").toDataURL());
+			}
+			//加载图片
+			function handleFileSelect(evt){
+				var canvasWidth=500;
+				var canvasHeight=500;
+				var file=evt.target.files[0];//?????target是什么东西?
+				
+				var reader =new FileReader();
+				reader.onload=function(fileObject){
+					var data=fileObject.target.result;
+					
+					//creat an image object
+					var image=new Image();
+					image.onload=function(){
+						window.imageSrc=this;
+						redrawMeme(window.imageSrc,null,null);//开始画图
+					}
+					
+					//Set image data to background image.
+					image.src=data;
+					console.log(fileObject.targe.result);
+				}
+				reader.readAsDataURL(file);
+			}
+	
+	//添加事件的监听
+	window.topLineText = "";
+    window.bottomLineText = "";
+    var input1 = document.getElementById('topLineText');
+    var input2 = document.getElementById('bottomLineText');
+    input1.oninput = textChangeListener;
+    input2.oninput = textChangeListener;
+    document.getElementById('file').addEventListener('change', handleFileSelect, false);
+    document.querySelector('button').addEventListener('click', saveFile, false);
+			
+		</script>
+		
+		
+		<script>
+//			var c=document.querySelector("#c");
+//			var ctx=c.getContext("2d");
+			
+//			//画矩形
+//			//ctx.fillRect(100,100,100,100);
+//			ctx.strokeRect(50,50,100,100);
+//			//画出路径
+//			ctx.beginPath();
+//			ctx.moveTo(75,75);
+//			ctx.lineTo(125,125);
+//			ctx.lineTo(125,75);
+//			ctx.lineTo(75,75);
+//          //开画
+//			ctx.fillStyle="blue";
+//			ctx.fill();
+//			//ctx.stroke();
+//			//写字
+//			ctx.strokeStyle="red";
+//			ctx.strokeText("canvas!",50,10);
+
+
+//			ctx.font="36px Impact";
+//			ctx.textAlign="center";
+//			ctx.strokeStyle="#000";
+//			ctx.lineWidth=3;
+//			ctx.strokeText("CANVAS MEMES",c.width/2,40);
+			
+			
+//			var image= new Image();
+//			
+//			image.onload=function(){
+//				console.log("图片加载好了");
+//				//加载图片
+//				ctx.drawImage(image,0,0,this.width,this.height);
+//				//保存 图片,会报错,因为不是服务器.
+//				var saveImage=c.toDataURL();
+//				window.open(saveImage);
+//			}
+//			image.src="./images/aaa.jpg";
+		</script>
+		
+		
+		<script></script>
+	</body>
+</html>
